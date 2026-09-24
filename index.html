@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobility Data Sources Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <h1>Mobility Data Sources</h1>
+    <div class="header-actions">
+      <button class="about-btn" id="about-toggle" aria-expanded="false" aria-controls="about-panel">About</button>
+      <a class="github-icon-btn" href="https://github.com/YOUR-USERNAME/mobility-dashboard" target="_blank" rel="noopener" aria-label="View repository on GitHub">
+        <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+        </svg>
+      </a>
+    </div>
+    <div class="about-panel" id="about-panel" hidden>
+      <p>This catalog documents 159 distinct data sources drawn from the human-mobility modeling literature, compiled as part of a broader review of how mobility is represented in epidemic simulation and where the underlying literature draws its data from. Starting from a small set of foundational citations, a citation-network snowball expanded the candidate literature to 24,216 papers, which were then screened down to 3,150 papers judged relevant to mobility representation or the data behind it.</p>
+      <p>Of those 3,150 papers, 2,055 contained a substantive statement of data requirements. Reading them identified 170 named data sources, excluding generic references with no identifiable source. These were cited across 330 papers, of which full text was retrieved for 325 (98.5%) through automated fetching, targeted browser retrieval, and manual access. Eleven pairs of sources turned out to describe the same underlying dataset or institution under different names and were merged, leaving the 159 distinct sources catalogued here, cited across 401 papers with verified full-text content.</p>
+      <p>Each entry records a source's scale, geographic and temporal coverage, stated limitations, methodological use, and access conditions. Sources are organized into fifteen categories by data type: fourteen covering observed data, plus a separate group for simulation and synthetic-population tools. A recurring pattern across the literature is that these sources are not interchangeable: studies comparing several sources for the same modeling task have found meaningfully different results depending solely on which one was used, and every major source carries some form of representativeness bias that is rarely disclosed with enough precision to correct for.</p>
+    </div>
+    <div class="masthead-stats" id="masthead-stats"></div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="filters" id="filters">
+    <button class="reset-all-btn" id="reset-all">Reset all filters</button>
+
+    <div class="filter-group">
+      <label for="search-input" class="filter-label">Search</label>
+      <input type="text" id="search-input" placeholder="Dataset name or description&hellip;" autocomplete="off">
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label-row">
+        <span class="filter-label">Category</span>
+        <button class="clear-btn" data-clear="section">Clear</button>
+      </div>
+      <div class="checkbox-list" id="section-filters"></div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label-row">
+        <span class="filter-label">Accessibility</span>
+        <button class="clear-btn" data-clear="accessibility_tag">Clear</button>
+      </div>
+      <div class="checkbox-list" id="access-filters"></div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label-row">
+        <span class="filter-label">Region</span>
+        <button class="clear-btn" data-clear="region">Clear</button>
+      </div>
+      <div class="checkbox-list scrollable" id="region-filters"></div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label-row">
+        <span class="filter-label">Year range</span>
+        <button class="clear-btn" id="clear-year">Clear</button>
+      </div>
+      <div class="year-range">
+        <input type="number" id="year-from" placeholder="From">
+        <span class="year-range-dash">&ndash;</span>
+        <input type="number" id="year-to" placeholder="To">
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label-row">
+        <span class="filter-label">Tags</span>
+        <button class="clear-btn" data-clear="tags">Clear</button>
+      </div>
+      <div class="checkbox-list scrollable" id="tag-filters"></div>
+    </div>
+  </aside>
+
+  <main class="results">
+    <div class="results-bar">
+      <span id="result-count"></span>
+      <select id="sort-select">
+        <option value="name">Sort: Name (A&ndash;Z)</option>
+        <option value="section">Sort: Category</option>
+        <option value="access">Sort: Accessibility</option>
+      </select>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="empty-state" id="empty-state" hidden>
+      <p>No datasets match these filters.</p>
+      <button id="empty-reset">Reset all filters</button>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop" hidden>
+  <div class="modal" id="modal-content" role="dialog" aria-modal="true"></div>
+</div>
+
+<footer class="site-footer">
+  <a href="https://github.com/YOUR-USERNAME/mobility-dashboard" target="_blank" rel="noopener">View this project on GitHub</a>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
